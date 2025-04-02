@@ -1,30 +1,29 @@
-const http = require('http');
-const {soma, subtrair, multiplicar, dividir} = require('./teste');
-const PORT = 8000;
-const url = require('url');
+const express = require('express');
+const {somar, subtrair, multiplicar, dividir} = require('./teste');
 
-const server = http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8'); // Serve pra utilizar a tabela ASCII -8 
-    // (que suporta caracteres especiais)
-    const urlCapturada = url.parse(req.url, true)
-    const {query, pathname} = urlCapturada
-    let resultado = 0
-    if (pathname == '/soma'){
-        resultado = soma(Number(query.a), Number(query.b))
-    }else if (pathname == '/subtrair'){
-        resultado = subtrair(Number(query.a), Number(query.b))
-    }else if (pathname == '/multiplicar'){
-        resultado = multiplicar(Number(query.a), Number(query.b))
-    }else if (pathname == '/dividir'){
-        resultado = dividir(Number(query.a), Number(query.b))
-    }else{
-        res.statusCode = 402
-        res.end('Página não encontrada')
-    }
-    res.end(`Resultado do cálculo: ${resultado}
-        para trocar os valores, utilize o url do site (ex: localhost:8000/?a=10&b=20)`);
-    });
-    
-    server.listen(PORT, () => {
+const server = express();
+const PORT = 8000;
+
+server.get('/somar', (req, res) => {
+    let resultado = somar(req.query.a, req.query.b)
+    res.send(`Resultado da soma: ${resultado}`);
+})
+
+server.get('/subtrair', (req, res) => {
+    let resultado = subtrair(req.query.a, req.query.b)
+    res.send(`Resultado da subtração: ${resultado}`);
+})
+
+server.get('/multiplicar', (req, res) => {
+    let resultado = multiplicar(req.query.a, req.query.b)
+    res.send(`Resultado da multiplicação: ${resultado}`);
+})
+
+server.get('/dividir', (req, res) => {
+    let resultado = dividir(req.query.a, req.query.b)
+    res.send(`Resultado da divisão: ${resultado}`);
+})
+
+server.listen(PORT, () => {
     console.log(`Servidor inicializado em: http://localhost:8000/`);
 });
