@@ -18,7 +18,7 @@ const server = http.createServer((req, res) => {
     }else if (pathname == '/dividir'){
         resultado = dividir(Number(query.a), Number(query.b))
     }else{
-        res.statusCode = 404
+        res.statusCode = 402
         res.end('Página não encontrada')
     }
     res.end(`Resultado do cálculo: ${resultado}
